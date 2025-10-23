@@ -58,7 +58,7 @@ class GeminiAdapter:
         """Generate a response from the Gemini model with audio input.
         Args:
             prompt: Input text prompt
-            audio_file_path: Path to the audio file (MP3 or WAV)
+            audio_file_path: Path to the audio file (MP3, WAV, or M4A)
             
         Returns:
             Tuple of (generated text response, usage metadata)

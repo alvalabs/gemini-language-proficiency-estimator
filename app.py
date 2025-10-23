@@ -2,11 +2,38 @@ import gradio as gr
 from adapters.gemini_adapter import GeminiAdapter
 from credentials import GEMINI_API_KEY
 
-# System prompt for language proficiency estimation
-SYSTEM_PROMPT = """You are an expert language assessment evaluator. Your task is to:
+# Available languages for assessment
+LANGUAGES = [
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Italian",
+    "Portuguese",
+    "Dutch",
+    "Russian",
+    "Chinese (Mandarin)",
+    "Japanese",
+    "Korean",
+    "Arabic",
+    "Hindi",
+    "Swedish",
+    "Norwegian",
+    "Danish",
+    "Finnish",
+    "Polish",
+    "Turkish",
+    "Vietnamese",
+    "Thai",
+    "Indonesian",
+]
 
-1. Listen to the audio response provided by the speaker. 
-2. Analyze the speaker's language proficiency level based on:
+def get_system_prompt(language: str) -> str:
+    """Generate system prompt for a specific target language."""
+    return f"""You are an expert language assessment evaluator. Your task is to:
+
+1. Listen to the audio response provided by the speaker speaking in {language}. 
+2. Analyze the speaker's {language} language proficiency level based on:
    - Pronunciation and clarity
    - Grammar and sentence structure
    - Vocabulary usage and range
@@ -35,13 +62,14 @@ SYSTEM_PROMPT = """You are an expert language assessment evaluator. Your task is
 Be specific, constructive, and objective in your assessment.
 """
 
-def analyze_audio_response(question: str, audio_file) -> str:
+def analyze_audio_response(question: str, audio_file, target_language: str) -> str:
     """
     Analyze an audio response for language proficiency and relevance.
     
     Args:
         question: The question that was asked
         audio_file: The audio file path from Gradio
+        target_language: The language to assess proficiency in
         
     Returns:
         Analysis results as formatted text
@@ -52,20 +80,25 @@ def analyze_audio_response(question: str, audio_file) -> str:
         return "⚠️ **Error:** Please upload an audio file."
     
     try:
+        # Generate system prompt with target language
+        system_prompt = get_system_prompt(target_language)
+        
         # Initialize Gemini adapter with system prompt
         gemini = GeminiAdapter(
             api_key=GEMINI_API_KEY,
             model_name="gemini-2.5-flash",
-            system_prompt=SYSTEM_PROMPT,
+            system_prompt=system_prompt,
             temperature=0.3,  # Lower temperature for more consistent assessments
             max_tokens=2048
         )
         analysis_prompt = f"""
-Please analyze the audio response to the following question:
+Please analyze the {target_language} audio response to the following question:
 
 **Question:** {question}
 
-Listen to the audio carefully and provide a comprehensive assessment of the speaker's language proficiency and whether they adequately answered the question.
+**Target Language:** {target_language}
+
+Listen to the audio carefully and provide a comprehensive assessment of the speaker's {target_language} language proficiency and whether they adequately answered the question.
 """
         
         # Generate analysis with audio
@@ -77,7 +110,7 @@ Listen to the audio carefully and provide a comprehensive assessment of the spea
         return result
         
     except ValueError as e:
-        return f"⚠️ **File Processing Error:**\n\n{str(e)}\n\nPlease ensure the audio file is in a supported format (MP3, WAV)."
+        return f"⚠️ **File Processing Error:**\n\n{str(e)}\n\nPlease ensure the audio file is in a supported format (MP3, WAV, M4A)."
     except Exception as e:
         error_msg = str(e)
         if "API key" in error_msg or "authentication" in error_msg.lower():
@@ -101,6 +134,14 @@ with gr.Blocks(title="Language Proficiency Estimator", theme=gr.themes.Soft()) a
     with gr.Row():
         with gr.Column(scale=1):
             gr.Markdown("### 📝 Input")
+            
+            language_dropdown = gr.Dropdown(
+                choices=LANGUAGES,
+                value="English",
+                label="Target Language",
+                info="Select the language to assess proficiency in"
+            )
+            
             question_input = gr.Textbox(
                 label="Question",
                 placeholder="Enter the question that was asked...",
@@ -148,7 +189,7 @@ with gr.Blocks(title="Language Proficiency Estimator", theme=gr.themes.Soft()) a
     # Connect the button to the function
     analyze_btn.click(
         fn=analyze_audio_response,
-        inputs=[question_input, audio_input],
+        inputs=[question_input, audio_input, language_dropdown],
         outputs=output
     )
 
