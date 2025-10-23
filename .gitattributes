@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# encrypt the credentials.py file with gpg
+credentials.py filter=git-crypt diff=git-crypt
