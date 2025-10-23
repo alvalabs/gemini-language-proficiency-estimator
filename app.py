@@ -38,8 +38,6 @@ def get_system_prompt(language: str) -> str:
    **Lower bound for proficiency level (CEFR):**[A1(beginner)/A2(elementary)/B1(intermediate)/B2(upper intermediate)/C1(advanced)/C2(mastery)]
 
    **Upper bound for proficiency level (CEFR):**[A1(beginner)/A2(elementary)/B1(intermediate)/B2(upper intermediate)/C1(advanced)/C2(mastery)]
-
-
    
    **Detailed Analysis:**
    - Pronunciation: [Your assessment]
@@ -47,8 +45,8 @@ def get_system_prompt(language: str) -> str:
    - Vocabulary: [Your assessment]
    - Fluency: [Your assessment]
    - Content Relevance: [Your assessment]
-   
-Be specific, constructive, and objective in your assessment.
+
+Be specific, constructive, concise and objective in your assessment.
 """
 
 def analyze_audio_response(question: str, audio_file, target_language: str) -> str:
