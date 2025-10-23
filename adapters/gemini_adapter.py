@@ -11,7 +11,7 @@ class GeminiAdapter:
         model_name: str = "gemini-2.5-flash",
         system_prompt: Optional[str] = None,
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
+        max_tokens: Optional[int] = 4096,  # Increased from default
         json_schema: Optional[dict] = None,
     ):
         """Initialize the Gemini adapter.
@@ -91,15 +91,19 @@ class GeminiAdapter:
             if self.system_prompt:
                 full_prompt = f"{self.system_prompt}\n\n{prompt}"
             
-            # Create a minimal generation config for audio
+            # Create generation config with higher token limit
             audio_gen_config = {
-                "temperature": self.temperature if self.temperature is not None else 0.7,
+                "temperature": self.temperature if self.temperature is not None else 0.3,
+                "max_output_tokens": 4096,  # Increased token limit
+                "top_p": 0.95,  # Controls diversity of output
+                "top_k": 40,    # Number of highest probability tokens to consider
             }
-            if self.max_tokens:
-                audio_gen_config["max_output_tokens"] = self.max_tokens
             
             # For audio, create a model without system_instruction to avoid conflicts
-            audio_model = genai.GenerativeModel(self.model_name)
+            audio_model = genai.GenerativeModel(
+                self.model_name,
+                generation_config=audio_gen_config,
+            )
             
             print(f"Generating content with model: {self.model_name}")
             
@@ -111,13 +115,26 @@ class GeminiAdapter:
                         "mime_type": mime_type,
                         "data": audio_data
                     }
-                ],
-                generation_config=audio_gen_config,
+                ]
             )
             
-            print("Content generated successfully")
+            # Get the full response text
+            if hasattr(response, 'text'):
+                result_text = response.text
+            else:
+                # Fallback to getting text from parts if .text doesn't work
+                result_text = ""
+                if hasattr(response, 'candidates') and response.candidates:
+                    for candidate in response.candidates:
+                        if hasattr(candidate, 'content') and hasattr(candidate.content, 'parts'):
+                            for part in candidate.content.parts:
+                                if hasattr(part, 'text'):
+                                    result_text += part.text + "\n"
             
-            return response.text, response.usage_metadata
+            print("Content generated successfully")
+            print(f"Response length: {len(result_text)} characters")
+            
+            return result_text.strip(), getattr(response, 'usage_metadata', {})
             
         except Exception as e:
             print(f"Error in generate_with_audio: {type(e).__name__}: {str(e)}")

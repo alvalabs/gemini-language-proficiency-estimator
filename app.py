@@ -1,31 +1,20 @@
 import gradio as gr
 from adapters.gemini_adapter import GeminiAdapter
 from credentials import GEMINI_API_KEY
+from logging import basicConfig, getLogger
+
+basicConfig(level="INFO", format="%(levelname)s - %(message)s")
+logger = getLogger(__name__)
 
 # Available languages for assessment
 LANGUAGES = [
     "English",
-    "Spanish",
-    "French",
-    "German",
-    "Italian",
-    "Portuguese",
-    "Dutch",
-    "Russian",
-    "Chinese (Mandarin)",
-    "Japanese",
-    "Korean",
-    "Arabic",
-    "Hindi",
     "Swedish",
     "Norwegian",
-    "Danish",
-    "Finnish",
-    "Polish",
-    "Turkish",
-    "Vietnamese",
-    "Thai",
-    "Indonesian",
+    "Russian",
+    "French",
+    "German",
+    "Turkish"
 ]
 
 def get_system_prompt(language: str) -> str:
@@ -106,6 +95,7 @@ Listen to the audio carefully and provide a comprehensive assessment of the spea
             prompt=analysis_prompt,
             audio_file_path=audio_file
         )
+        logger.info(f"Received result: {result}")
         
         return result
         
@@ -137,7 +127,7 @@ with gr.Blocks(title="Language Proficiency Estimator", theme=gr.themes.Soft()) a
             
             language_dropdown = gr.Dropdown(
                 choices=LANGUAGES,
-                value="English",
+                value="Swedish",
                 label="Target Language",
                 info="Select the language to assess proficiency in"
             )

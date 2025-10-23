@@ -4,7 +4,7 @@ An AI-powered language proficiency assessment tool that analyzes audio responses
 
 ## Features
 
-- **Audio Analysis**: Upload MP3, WAV, or M4A files or record directly through the web interface
+- **Audio Analysis**: Upload MP3 or WAV files or record directly through the web interface
 - **Proficiency Assessment**: AI-powered evaluation of:
   - Pronunciation and clarity
   - Grammar and sentence structure
@@ -63,7 +63,7 @@ The application will be available at: **http://localhost:7860**
 ## Usage
 
 1. **Enter a Question**: Type the question that the speaker should be answering
-2. **Upload Audio**: Upload an MP3/WAV/M4A file or record directly using your microphone
+2. **Upload Audio**: Upload an MP3/WAV file or record directly using your microphone
 3. **Analyze**: Click "Analyze Response" to get instant feedback
 4. **Review Results**: Get detailed proficiency assessment including:
    - Overall proficiency level (Beginner to Proficient)
@@ -89,8 +89,8 @@ The application will be available at: **http://localhost:7860**
 ## Technical Details
 
 - **Framework**: Gradio 4.0+
-- **AI Model**: Google Gemini 2.5 Flash (with audio support)
-- **Audio Formats**: MP3, WAV, M4A
+- **AI Model**: Google Gemini 1.5 Pro (with audio support)
+- **Audio Formats**: MP3, WAV
 - **Dependencies**: See `pyproject.toml`
 
 ## Troubleshooting
@@ -112,8 +112,7 @@ The application will be available at: **http://localhost:7860**
 **Audio Processing Fails**
 - Try a smaller audio file (under 10MB recommended)
 - Ensure the audio quality is clear
-- Supported formats: MP3, WAV, M4A
-- Convert the file to one of these formats if needed
+- Convert the file to MP3 or WAV format if it's in another format
 
 ## Additional Adapters
 
