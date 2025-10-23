@@ -73,6 +73,8 @@ class GeminiAdapter:
                     mime_type = 'audio/mpeg'
                 elif audio_file_path.lower().endswith('.wav'):
                     mime_type = 'audio/wav'
+                elif audio_file_path.lower().endswith('.m4a'):
+                    mime_type = 'audio/mp4'
                 else:
                     mime_type = 'audio/mpeg'  # default
             

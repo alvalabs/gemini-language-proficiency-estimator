@@ -93,7 +93,7 @@ with gr.Blocks(title="Language Proficiency Estimator", theme=gr.themes.Soft()) a
         """
         # 🎙️ Language Proficiency Estimator
         
-        Upload an audio response (MP3 or WAV) and receive an AI-powered assessment of language proficiency 
+        Upload an audio response (MP3, WAV, or M4A) and receive an AI-powered assessment of language proficiency 
         and content relevance using Google's Gemini model.
         """
     )
@@ -121,7 +121,7 @@ with gr.Blocks(title="Language Proficiency Estimator", theme=gr.themes.Soft()) a
                 ### ℹ️ Tips
                 - Provide a clear question for context
                 - Ensure audio quality is good
-                - Supported formats: MP3, WAV
+                - Supported formats: MP3, WAV, M4A
                 """
             )
         
