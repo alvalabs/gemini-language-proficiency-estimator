@@ -8,7 +8,7 @@ class GeminiAdapter:
     def __init__(
         self,
         api_key: str,
-        model_name: str = "gemini-2.5-pro",
+        model_name: str = "gemini-2.5-flash",
         system_prompt: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: Optional[int] = None,

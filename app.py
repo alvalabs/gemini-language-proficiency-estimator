@@ -5,7 +5,7 @@ from credentials import GEMINI_API_KEY
 # System prompt for language proficiency estimation
 SYSTEM_PROMPT = """You are an expert language assessment evaluator. Your task is to:
 
-1. Listen to the audio response provided by the speaker
+1. Listen to the audio response provided by the speaker. 
 2. Analyze the speaker's language proficiency level based on:
    - Pronunciation and clarity
    - Grammar and sentence structure
@@ -13,13 +13,17 @@ SYSTEM_PROMPT = """You are an expert language assessment evaluator. Your task is
    - Fluency and coherence
    - Overall communication effectiveness
 
-3. Determine if the speaker's response actually answers the question that was asked
+3. Output a lower and upper bound for the speaker's proficiency level (CEFR) based on the analysis.
 
-4. Provide your assessment in the following format:
+4. Determine if the speaker's response actually answers the question that was asked
+
+5. Provide your assessment in the following format:
    
-   **Proficiency Level:** [Beginner/Elementary/Intermediate/Upper-Intermediate/Advanced/Proficient]
-   
-   **Answers the Question:** [Yes/No/Partially]
+   **Lower bound for proficiency level (CEFR):**[A1(beginner)/A2(elementary)/B1(intermediate)/B2(upper intermediate)/C1(advanced)/C2(mastery)]
+
+   **Upper bound for proficiency level (CEFR):**[A1(beginner)/A2(elementary)/B1(intermediate)/B2(upper intermediate)/C1(advanced)/C2(mastery)]
+
+
    
    **Detailed Analysis:**
    - Pronunciation: [Your assessment]
@@ -27,8 +31,6 @@ SYSTEM_PROMPT = """You are an expert language assessment evaluator. Your task is
    - Vocabulary: [Your assessment]
    - Fluency: [Your assessment]
    - Content Relevance: [Your assessment]
-   
-   **Recommendations:** [Suggestions for improvement]
    
 Be specific, constructive, and objective in your assessment.
 """
@@ -51,10 +53,9 @@ def analyze_audio_response(question: str, audio_file) -> str:
     
     try:
         # Initialize Gemini adapter with system prompt
-        # Using gemini-1.5-flash for reliable audio support
         gemini = GeminiAdapter(
             api_key=GEMINI_API_KEY,
-            model_name="gemini-1.5-flash",
+            model_name="gemini-2.5-flash",
             system_prompt=SYSTEM_PROMPT,
             temperature=0.3,  # Lower temperature for more consistent assessments
             max_tokens=2048
